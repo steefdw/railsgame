@@ -1,67 +1,51 @@
 class InitialStructure < ActiveRecord::Migration
   def up
-  	connection.execute %Q(
-DROP TABLE IF EXISTS `players`;
-CREATE TABLE IF NOT EXISTS `players` (
-  `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) unsigned NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  `info` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+    create_table "buildings", force: :cascade do |t|
+      t.integer  "city_id",       limit: 4,               null: false
+      t.integer  "building_type", limit: 4,               null: false
+      t.string   "lvl",           limit: 2, default: "0", null: false
+      t.string   "loc",           limit: 2, default: "0", null: false
+      t.datetime "finished_at"
+    end
 
-DROP TABLE IF EXISTS `optiontypes`;
-CREATE TABLE IF NOT EXISTS `optiontypes` (
-  `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
-  `value` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+    add_index "buildings", ["city_id", "loc"], name: "city_id_loc", unique: true, using: :btree
 
-DROP TABLE IF EXISTS `options`;
-CREATE TABLE IF NOT EXISTS `options` (
-  `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
-  `optiontype_id` int(12) unsigned NOT NULL,
-  `value` varchar(100) NOT NULL,
-  `description` text,
-  `rpmA` float NOT NULL DEFAULT '0',
-  `rpmB` float NOT NULL DEFAULT '0',
-  `rpmC` float NOT NULL DEFAULT '0',
-  `rpmD` float NOT NULL DEFAULT '0',
-  `rpmE` float NOT NULL DEFAULT '0',
-  `modifier` float NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+    create_table "cities", force: :cascade do |t|
+      t.integer  "player_id",     limit: 4,                       null: false
+      t.string   "name",          limit: 32, default: "New city", null: false
+      t.float    "lat",           limit: 24
+      t.float    "lng",           limit: 24
+      t.datetime "created_at",                                    null: false
+      t.datetime "updated_at"
+      t.datetime "calculated_at"
+      t.integer  "resA",          limit: 4,  default: 0,          null: false
+      t.integer  "resB",          limit: 4,  default: 0,          null: false
+      t.integer  "resC",          limit: 4,  default: 0,          null: false
+      t.integer  "resD",          limit: 4,  default: 0,          null: false
+      t.integer  "resE",          limit: 4,  default: 0,          null: false
+    end
 
-DROP TABLE IF EXISTS `cities`;
-CREATE TABLE IF NOT EXISTS `cities` (
-  `id` int( 12 ) unsigned NOT NULL AUTO_INCREMENT ,
-  `player_id` int(11) unsigned NOT NULL,
-  `name` varchar( 32 ) NOT NULL DEFAULT 'New city',
-  `lat` float(10,6) DEFAULT NULL,
-  `lng` float(10,6) DEFAULT NULL,  
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  `calculated_at`  datetime DEFAULT NULL ,
-  `resA` int( 12 ) NOT NULL DEFAULT '0',
-  `resB` int( 12 ) NOT NULL DEFAULT '0',
-  `resC` int( 12 ) NOT NULL DEFAULT '0',
-  `resD` int( 12 ) NOT NULL DEFAULT '0',
-  `resE` int( 12 ) NOT NULL DEFAULT '0',
-  PRIMARY KEY ( `id` )
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+    create_table "options", force: :cascade do |t|
+      t.integer "optiontype_id", limit: 4,                   null: false
+      t.string  "value",         limit: 100,                 null: false
+      t.text    "description",   limit: 65535
+      t.float   "rpmA",          limit: 24,    default: 0.0, null: false
+      t.float   "rpmB",          limit: 24,    default: 0.0, null: false
+      t.float   "rpmC",          limit: 24,    default: 0.0, null: false
+      t.float   "rpmD",          limit: 24,    default: 0.0, null: false
+      t.float   "rpmE",          limit: 24,    default: 0.0, null: false
+      t.float   "modifier",      limit: 24,    default: 0.0, null: false
+    end
 
-DROP TABLE IF EXISTS `buildings`;
-CREATE TABLE IF NOT EXISTS `buildings` (
-  `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
-  `city_id` int(12) unsigned NOT NULL,
-  `building_type` int(12) unsigned NOT NULL,
-  `lvl` enum('0','1','2','3','4','5','6','7','8','9','10') NOT NULL DEFAULT '0',
-  `loc` enum('0','1','2','3','4','5','6','7','8','9','10') NOT NULL DEFAULT '0',
-  `finished_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `city_id_loc` (`city_id`,`loc`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-  	)
+    create_table "optiontypes", force: :cascade do |t|
+      t.string "value", limit: 100, null: false
+    end
+
+    create_table "players", force: :cascade do |t|
+      t.integer  "user_id",    limit: 4,     null: false
+      t.datetime "created_at",               null: false
+      t.datetime "updated_at"
+      t.text     "info",       limit: 65535
+    end
   end
 end
