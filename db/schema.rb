@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150202192958) do
+ActiveRecord::Schema.define(version: 20150202210728) do
 
   create_table "buildings", force: :cascade do |t|
     t.integer  "city_id",       limit: 4,               null: false
@@ -38,20 +38,20 @@ ActiveRecord::Schema.define(version: 20150202192958) do
     t.integer  "resE",          limit: 4,  default: 0,          null: false
   end
 
-  create_table "options", force: :cascade do |t|
-    t.integer "optiontype_id", limit: 4,                   null: false
-    t.string  "value",         limit: 100,                 null: false
-    t.text    "description",   limit: 65535
-    t.float   "rpmA",          limit: 24,    default: 0.0, null: false
-    t.float   "rpmB",          limit: 24,    default: 0.0, null: false
-    t.float   "rpmC",          limit: 24,    default: 0.0, null: false
-    t.float   "rpmD",          limit: 24,    default: 0.0, null: false
-    t.float   "rpmE",          limit: 24,    default: 0.0, null: false
-    t.float   "modifier",      limit: 24,    default: 0.0, null: false
+  create_table "option_types", force: :cascade do |t|
+    t.string "value", limit: 100, null: false
   end
 
-  create_table "optiontypes", force: :cascade do |t|
-    t.string "value", limit: 100, null: false
+  create_table "options", force: :cascade do |t|
+    t.integer "option_type_id", limit: 4,                   null: false
+    t.string  "value",          limit: 100,                 null: false
+    t.text    "description",    limit: 65535
+    t.float   "rpmA",           limit: 24,    default: 0.0, null: false
+    t.float   "rpmB",           limit: 24,    default: 0.0, null: false
+    t.float   "rpmC",           limit: 24,    default: 0.0, null: false
+    t.float   "rpmD",           limit: 24,    default: 0.0, null: false
+    t.float   "rpmE",           limit: 24,    default: 0.0, null: false
+    t.float   "modifier",       limit: 24,    default: 0.0, null: false
   end
 
   create_table "players", force: :cascade do |t|
